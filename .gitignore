@@ -1,0 +1,65 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+*.log.*
+/logs
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Production build
+/build/
+/dist/
+
+# Temporary files and directories
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Coverage reports
+coverage/
+
+# Debugging files
+*.stackdump
+
+# PM2
+pids/
+*.pid
+*.seed
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Other Ignored Files
+src/**/*.test.js
+src/**/*.spec.js
+src/**/*.test.ts
+src/**/*.spec.ts
+
+# Ignore IIS settings if any
+iisnode/
+
+# Ignore compiled TypeScript files (if applicable)
+*.js.map
+*.d.ts
+out/
+
+
