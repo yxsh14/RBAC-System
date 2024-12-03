@@ -10,11 +10,11 @@ const register=async (req,res)=>{
 
         // 2. Validating data
         if ([username, role, password].some((field) => field?.trim === "")) {
-            throw new ApiError(400, "All fields are reqired")
+            return res.status(401).json(new ApiError(401, null,"All fields are required")); 
         }
         // 3. Checking the username is unique or not
         const existedUser=await User.findOne({username});
-        if (existedUser) throw new ApiError(400,"Username already exists.");
+        if (existedUser) return res.status(401).json(new ApiError(401, null,"Username already exists.")); 
 
         // 4. Hashing password
         const hashedPassword = await bcrypt.hash(password,10);
@@ -22,9 +22,9 @@ const register=async (req,res)=>{
         // 5. Saving the user
         const newUser=new User({username,password:hashedPassword,role});
         await newUser.save();
-        return res.status(201).json(new ApiResponse(200, newUser,`User Registered with username ${username}`))
+        return res.status(201).json(new ApiResponse(200, newUser,`User Registered with username ${username}`));
     } catch (error) {
-        throw new ApiError(500,"Something went wrong while creating the account.")
+        return res.status(500).json(new ApiError(500, null,"Something went wrong while creating the account.")); 
     }
 
 };
@@ -33,12 +33,12 @@ const generateAccessAndRefreshToken = (async (userId) => {
         const user = await User.findById(userId)
         const accessToken = await user.generateAccessToken();
         const refreshToken = await user.generateRefreshToken();
-        // refreshToken ko database mai bhi save karana hoga 
+        // refreshToken saving in database
         user.refreshToken = refreshToken;
         await user.save({ validateBeforeSave: false })
         return { accessToken, refreshToken }
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating access and refresh token.")
+        return res.status(500).json(new ApiError(500, null,"Something went wrong while generating access and refresh token.")); 
     }
 })
 const login=async (req,res)=>{
@@ -48,19 +48,19 @@ const login=async (req,res)=>{
 
         // 2. Validating data 
         if ([username, password].some((field) => field?.trim === "")) {
-            throw new ApiError(409, "All fields are reqired")
+            return res.status(409).json(new ApiError(409, null,"All fields are required")); 
         }
 
         // 3. Finding the user
         const user=await User.findOne({username});
         if (!user){
-            throw new ApiError(409, `No user with username ${username}`);
+            return res.status(409).json(new ApiError(409, null,`No user with username ${username}`)); 
         }
 
         // 4. Checking the password
         const isMatch = await user.isPasswordCorrect(password);
         if (!isMatch) {
-            throw new ApiError(401, "Invalid username or password");
+            return res.status(401).json(new ApiError(401, null,`Invalid username or password`)); 
         }
         // 5. Generate tokens using schema methods
         const {accessToken,refreshToken}=await generateAccessAndRefreshToken(user._id);
@@ -77,7 +77,7 @@ const login=async (req,res)=>{
         .cookie("refreshToken",refreshToken, options)
         .json(new ApiResponse(200,{user:loggedInUser,accessToken,refreshToken},"User logged in Successfully."))
     } catch (error) {
-        throw new ApiError(500, error?.message || "Error while logging in.")
+        return res.status(500).json(new ApiError(500, null,`Error while logging in.`)); 
     }
 }
 const logout=async(req,res)=>{
@@ -94,7 +94,7 @@ const logout=async(req,res)=>{
         .clearCookie("refreshToken",options)
         .json(new ApiResponse(200,{},"User Logged Out Successfully."))     
     } catch (error) {
-        throw new ApiError(500, error?.message || "Error while logging out.")
+        return res.status(500).json(new ApiError(500, null,`Error while logging out.`)); 
     }
 }
 export{
