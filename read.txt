@@ -1,0 +1,117 @@
+Checking all Routes
+
+Authorization Routes
+
+1. Register -POST
+URL: http://localhost:8001/api/auth/register
+Body (JSON):
+	{
+		"username":"jainis",
+		"password":"12345678",
+		"role":"user"
+	}
+
+2. Login -POST
+URL: http://localhost:8001/api/auth/login
+Body(JSON): 
+	{
+		"username":"yash",
+		"password":"12345678"
+	}
+
+3.Logout -POST 
+URL: http://localhost:8001/api/auth/logout
+
+Header:
+Authorization: Bearer <TOKEN>
+
+
+User Routes
+
+1. Get All Blogs -GET
+URL: http://localhost:8001/api/user/blogs
+
+Header:
+Authorization: Bearer <TOKEN> (admin user checked)
+
+2. Access Request for a particular admin -POST
+URL: http://localhost:8001/api/user/access
+
+Header:
+Authorization: Bearer <TOKEN> (admin user checked)
+
+Body(JSON):
+{
+    "adminId":"674daf75b5bb076958c90f82"
+}
+
+
+
+
+
+
+Admin Routes 
+
+1. Create Blog -POST 
+URL: http://localhost:8001/api/admin/create
+Header: Authorization: Bearer <TOKEN> (admin user checked)
+
+Body (JSON):
+	{
+    "title":"Blog1",
+    "content":"This is the blog created by admin yash."
+	}
+
+
+2. Edit Blog -PATCH
+URL: http://localhost:8001/api/edit/:BlogId
+Header: Authorization: Bearer <TOKEN> (admin user Checked)
+
+Body (JSON):
+	{
+    "title":"Blog1",
+    "content":"This is the blog edited by admin yash."
+	}
+
+3.Delete Blog -DELETE
+URL: http://localhost:8001/api/admin/delete/:BlogId
+Header:  Authorization: Bearer <TOKEN> (admin user Checked)
+
+4. Accept a User Request for a moderator -PATCH
+URL: http://localhost:8001/api/admin/:RequestId
+Header: Authorization: Bearer <TOKEN> (admin user Checked)
+
+Body (JSON):
+{
+"status":"approved"
+}
+
+
+Moderator Routes
+1. Get All Blogs -GET
+URL: http://localhost:8001/api/user/blogs
+
+Header:
+Authorization: Bearer <TOKEN> (admin user checked)
+
+2. Access Request for a particular admin -POST
+URL: http://localhost:8001/api/user/access
+
+Header:
+Authorization: Bearer <TOKEN> (admin user checked)
+
+Body(JSON):
+{
+    "adminId":"674daf75b5bb076958c90f82"
+}
+
+3. Edit the blogs of an admin when request approved
+URL: http://localhost:8001/api/edit/:BlogId
+Header: Authorization: Bearer <TOKEN> (admin user Checked)
+
+Body (JSON):
+	{
+    "title":"Blog1",
+    "content":"This is the blog edited by admin yash."
+	}
+

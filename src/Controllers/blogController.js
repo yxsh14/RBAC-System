@@ -74,3 +74,25 @@ export const getAllBlogs = async (req, res) => {
         return res.status(500).json(new ApiError(500, null, `Failed to fetch the blogs: ${error.message}`));
     }
 }
+
+export const getBlogsByAdmin = async (req, res) => {
+    try {
+        const adminId = req.user._id;
+
+        // Validate adminId
+        if (!adminId) {
+            return res.status(400).json(new ApiResponse(400, null, "Admin ID is required."));
+        }
+
+        // Fetch blogs created by the specified admin
+        const blogs = await Blog.find({ createdBy: adminId }).populate("createdBy", "username");
+
+        if (blogs.length === 0) {
+            return res.status(404).json(new ApiResponse(404, null, "No blogs found for this admin."));
+        }
+
+        res.status(200).json(new ApiResponse(200, blogs, "Blogs fetched successfully."));
+    } catch (error) {
+        return res.status(500).json(new ApiError(500, null, `Failed to fetch blogs: ${error.message}`));
+    }
+};

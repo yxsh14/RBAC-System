@@ -50,8 +50,24 @@ export const getModeratorsForAdmin = async (req, res) => {
     const adminId = req.user.id;
 
     try {
-        const moderators = await AdminModerator.find({ adminId }).populate("moderatorId", "name email");
+        const moderators = await AdminModerator.find({ adminId }).populate("moderatorId", "username");
         res.status(200).json(new ApiResponse(200, moderators, `All moderators for admin ${adminId}`));
+    } catch (error) {
+        res.status(500).json(new ApiError(500, error.message));
+    }
+};
+// Get all requests made by users to an admin
+export const getRequestsForAdmin = async (req, res) => {
+    const adminId = req.user.id;
+    try {
+        // Find all requests targeting this admin
+        const requests = await ManageRequest.find({ adminId }).populate("userId", "username email");
+
+        if (!requests.length) {
+            return res.status(404).json(new ApiResponse(404, null, "No requests found for this admin."));
+        }
+
+        res.status(200).json(new ApiResponse(200, requests, `All requests made to admin ${adminId}`));
     } catch (error) {
         res.status(500).json(new ApiError(500, error.message));
     }
