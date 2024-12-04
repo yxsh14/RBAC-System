@@ -75,7 +75,7 @@ Create a .env file in the root directory based on .sample.env.
 
 4. Start the application:
     ```bash
-    npm start
+    npm run dev
 
 ### Technologies Used: 
 
